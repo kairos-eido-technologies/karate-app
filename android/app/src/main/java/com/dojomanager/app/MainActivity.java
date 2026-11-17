@@ -122,6 +122,33 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        @android.webkit.JavascriptInterface
+        public void printDocument(String htmlContent, String documentName) {
+            activity.runOnUiThread(() -> {
+                try {
+                    android.print.PrintManager printManager = (android.print.PrintManager) activity.getSystemService(android.content.Context.PRINT_SERVICE);
+                    if (printManager != null) {
+                        WebView printWebView = new WebView(activity);
+                        printWebView.setWebViewClient(new WebViewClient() {
+                            @Override
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                return false;
+                            }
+                            @Override
+                            public void onPageFinished(WebView view, String url) {
+                                android.print.PrintDocumentAdapter printAdapter = printWebView.createPrintDocumentAdapter(documentName);
+                                printManager.print(documentName, printAdapter, new android.print.PrintAttributes.Builder().build());
+                            }
+                        });
+                        printWebView.loadDataWithBaseURL("file:///android_asset/", htmlContent, "text/html", "UTF-8", null);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to print document", e);
+                    Toast.makeText(activity, "Print error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -212,8 +239,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Launch directly into the app launcher without any login prompt
-        String startUrl = "http://127.0.0.1:" + port + "/apps";
+        // Launch directly into the dashboard without any login prompt
+        String startUrl = "http://127.0.0.1:" + port + "/dashboard";
         Log.i(TAG, "Loading URL: " + startUrl);
         webView.loadUrl(startUrl);
     }

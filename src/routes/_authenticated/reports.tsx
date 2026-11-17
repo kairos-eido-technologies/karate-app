@@ -2,14 +2,13 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import {
   BarChart2,
-  Download,
   Calendar,
   IndianRupee,
   Users,
   AlertCircle,
   TrendingUp,
   MessageSquare,
-  FileSpreadsheet,
+  FileText,
 } from 'lucide-react';
 import {
   PieChart,
@@ -23,12 +22,12 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import * as XLSX from 'xlsx';
 import { db } from '@/lib/db/db';
 import { inr, fmtDate, fmtMonth } from '@/lib/format';
 import { BELT_COLORS } from '@/lib/belt-colors';
 import { PageHeader } from '@/components/PageHeader';
 import { BeltBadge } from '@/components/BeltBadge';
+import { exportHtmlToPdf } from '@/lib/pdf-export';
 import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_authenticated/reports')({
@@ -44,6 +43,7 @@ function ReportsPage() {
     return db.subscribe(() => setTick((t) => t + 1));
   }, []);
 
+  const settings = db.getSettings();
   const students = db.getStudents(true);
   const beltLevels = db.getBeltLevels();
   const attendance = db.getAttendance();
@@ -75,28 +75,57 @@ function ReportsPage() {
     };
   });
 
-  // Export Attendance to Excel
-  const handleExportAttendance = () => {
+  // Export Attendance to PDF
+  const handleExportAttendancePdf = () => {
     try {
-      const data = attendanceRows.map((r, i) => ({
-        '#': i + 1,
-        'Student Name': r.name,
-        'Belt Level': r.beltName,
-        'Present Days': r.present,
-        'Absent Days': r.absent,
-        'Late Days': r.late,
-        'Leave Days': r.leave,
-        'Total Sessions': r.total,
-        'Attendance %': `${r.rate}%`,
-      }));
+      const columns = [
+        { header: '#', align: 'center' as const },
+        { header: 'Student Name', align: 'left' as const },
+        { header: 'Belt Level', align: 'left' as const },
+        { header: 'Present', align: 'center' as const },
+        { header: 'Absent', align: 'center' as const },
+        { header: 'Late', align: 'center' as const },
+        { header: 'Leave', align: 'center' as const },
+        { header: 'Total Sessions', align: 'center' as const },
+        { header: 'Attendance %', align: 'right' as const },
+      ];
 
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
-      XLSX.writeFile(wb, `Attendance_Report_${selectedMonth}.xlsx`);
-      toast.success('Attendance report exported to Excel!');
+      const rows = attendanceRows.map((r, i) => [
+        i + 1,
+        r.name,
+        r.beltName,
+        r.present,
+        r.absent,
+        r.late,
+        r.leave,
+        r.total,
+        `${r.rate}%`,
+      ]);
+
+      const avgRate =
+        attendanceRows.length > 0
+          ? Math.round(
+              attendanceRows.reduce((acc, r) => acc + r.rate, 0) / attendanceRows.length
+            )
+          : 0;
+
+      exportHtmlToPdf({
+        title: 'Monthly Student Attendance Report',
+        subtitle: `Session Month: ${fmtMonth(selectedMonth)}`,
+        filename: `Attendance_Report_${selectedMonth}`,
+        academyName: settings?.academy_name,
+        address: settings?.address,
+        phone: settings?.phone,
+        columns,
+        rows,
+        summary: [
+          { label: 'Total Enrolled', value: `${attendanceRows.length} Students` },
+          { label: 'Avg Attendance', value: `${avgRate}%` },
+        ],
+      });
+      toast.success('Generating Attendance PDF...');
     } catch {
-      toast.error('Failed to export Excel.');
+      toast.error('Failed to generate Attendance PDF.');
     }
   };
 
@@ -105,6 +134,63 @@ function ReportsPage() {
   const totalPaid = fees.reduce((acc, f) => acc + (f.amount_paid || 0), 0);
   const totalPending = Math.max(0, totalDue - totalPaid);
   const collectionRate = totalDue > 0 ? Math.round((totalPaid / totalDue) * 100) : 0;
+
+  // Export Fee Statements to PDF
+  const handleExportFeesPdf = () => {
+    try {
+      const eligible = students.filter((s) => {
+        const enrollMonth = s.enrollment_date ? s.enrollment_date.slice(0, 7) : '1970-01';
+        return enrollMonth <= selectedMonth;
+      });
+
+      const columns = [
+        { header: '#', align: 'center' as const },
+        { header: 'Student Name', align: 'left' as const },
+        { header: 'Parent WhatsApp', align: 'left' as const },
+        { header: 'Monthly Due', align: 'right' as const },
+        { header: 'Paid Amount', align: 'right' as const },
+        { header: 'Balance Due', align: 'right' as const },
+        { header: 'Status', align: 'center' as const },
+      ];
+
+      const rows = eligible.map((s, i) => {
+        const fee = fees.find((f) => f.student_id === s.id);
+        const due = fee?.amount_due || s.monthly_fee || 1500;
+        const paid = fee?.amount_paid || 0;
+        const bal = due - paid;
+        const status = fee?.payment_status || (bal <= 0 ? 'PAID' : paid > 0 ? 'PARTIAL' : 'UNPAID');
+
+        return [
+          i + 1,
+          s.name,
+          s.parent_phone,
+          inr(due),
+          inr(paid),
+          inr(Math.max(0, bal)),
+          status,
+        ];
+      });
+
+      exportHtmlToPdf({
+        title: 'Monthly Tuition Fee Statement',
+        subtitle: `Billing Month: ${fmtMonth(selectedMonth)}`,
+        filename: `Fee_Statement_${selectedMonth}`,
+        academyName: settings?.academy_name,
+        address: settings?.address,
+        phone: settings?.phone,
+        columns,
+        rows,
+        summary: [
+          { label: 'Total Expected Dues', value: inr(totalDue) },
+          { label: 'Total Collected', value: inr(totalPaid) },
+          { label: 'Total Outstanding', value: inr(totalPending) },
+        ],
+      });
+      toast.success('Generating Fee Statement PDF...');
+    } catch {
+      toast.error('Failed to generate Fee Statement PDF.');
+    }
+  };
 
   const pieData = [
     { name: 'Collected', value: totalPaid, color: '#16a34a' },
@@ -138,6 +224,47 @@ function ReportsPage() {
     .filter((row) => row.totalBalance > 0)
     .sort((a, b) => b.totalBalance - a.totalBalance);
 
+  // Export Pending Dues to PDF
+  const handleExportPendingDuesPdf = () => {
+    try {
+      const columns = [
+        { header: '#', align: 'center' as const },
+        { header: 'Student Name', align: 'left' as const },
+        { header: 'Parent Contact', align: 'left' as const },
+        { header: 'Overdue Months', align: 'center' as const },
+        { header: 'Outstanding Due', align: 'right' as const },
+      ];
+
+      const rows = pendingDuesList.map((p, i) => [
+        i + 1,
+        p.student.name,
+        p.student.parent_phone,
+        `${p.overdueMonths} mo`,
+        inr(p.totalBalance),
+      ]);
+
+      const totalBalanceAll = pendingDuesList.reduce((acc, p) => acc + p.totalBalance, 0);
+
+      exportHtmlToPdf({
+        title: 'Outstanding Fee Dues Roster',
+        subtitle: `As of ${new Date().toLocaleDateString('en-IN')}`,
+        filename: `Pending_Dues_Roster_${selectedMonth}`,
+        academyName: settings?.academy_name,
+        address: settings?.address,
+        phone: settings?.phone,
+        columns,
+        rows,
+        summary: [
+          { label: 'Pending Students', value: `${pendingDuesList.length}` },
+          { label: 'Total Overdue Balance', value: inr(totalBalanceAll) },
+        ],
+      });
+      toast.success('Generating Dues PDF...');
+    } catch {
+      toast.error('Failed to generate Dues PDF.');
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
       <PageHeader
@@ -167,12 +294,12 @@ function ReportsPage() {
                 <span className="text-xs text-stone-400 font-mono">{fmtMonth(selectedMonth)}</span>
               </div>
               <button
-                onClick={handleExportAttendance}
+                onClick={handleExportAttendancePdf}
                 className="h-8 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-stone-50 transition active:scale-95"
                 style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}
               >
-                <Download className="h-3.5 w-3.5" />
-                Export Excel (.xlsx)
+                <FileText className="h-3.5 w-3.5 text-rose-700" />
+                Export Attendance PDF
               </button>
             </div>
 
@@ -218,9 +345,19 @@ function ReportsPage() {
               <h3 className="font-bold text-sm text-stone-900">Fee Collection Overview</h3>
               <span className="text-xs text-stone-400 font-mono">{fmtMonth(selectedMonth)}</span>
             </div>
-            <span className="text-xs font-mono font-black" style={{ color: 'var(--primary)' }}>
-              {collectionRate}% Collected
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExportFeesPdf}
+                className="h-8 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-stone-50 transition active:scale-95"
+                style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}
+              >
+                <FileText className="h-3.5 w-3.5 text-rose-700" />
+                Export Fees PDF
+              </button>
+              <span className="hidden sm:inline text-xs font-mono font-black" style={{ color: 'var(--primary)' }}>
+                {collectionRate}% Collected
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
@@ -295,14 +432,24 @@ function ReportsPage() {
                 <h3 className="font-bold text-sm text-stone-900">Pending Dues Roster</h3>
                 <span className="text-xs text-stone-400 font-mono">Sorted by overdue amount</span>
               </div>
-              <button
-                onClick={() => navigate({ to: '/fees' })}
-                className="h-8 px-3 rounded-xl text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition active:scale-95 shadow-2xs"
-                style={{ background: '#25D366' }}
-              >
-                <MessageSquare className="h-3.5 w-3.5" />
-                Open Fee Reminders
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleExportPendingDuesPdf}
+                  className="h-8 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-stone-50 transition active:scale-95"
+                  style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}
+                >
+                  <FileText className="h-3.5 w-3.5 text-rose-700" />
+                  Export Dues PDF
+                </button>
+                <button
+                  onClick={() => navigate({ to: '/fees' })}
+                  className="h-8 px-3 rounded-xl text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition active:scale-95 shadow-2xs"
+                  style={{ background: '#25D366' }}
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  Reminders
+                </button>
+              </div>
             </div>
 
             <div className="max-h-64 overflow-y-auto mt-3">

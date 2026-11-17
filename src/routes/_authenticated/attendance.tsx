@@ -121,29 +121,13 @@ function AttendancePage() {
     }
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     clearMarks();
-    toast.info('Cleared marks for this session.');
-  };
-
-  // Save All button
-  const handleSaveAll = async () => {
-    setIsSaving(true);
     try {
-      const recordsToSave: AttendanceRecord[] = Object.entries(marks).map(([studentId, status]) => ({
-        id: crypto.randomUUID(),
-        student_id: studentId,
-        date: selectedDate,
-        status,
-        notes: notes[studentId] || '',
-      }));
-
-      await db.push([{ type: 'BULK_ATTENDANCE', payload: recordsToSave }]);
-      toast.success(`Saved attendance for ${recordsToSave.length} students!`);
+      await db.push([{ type: 'CLEAR_ATTENDANCE_DATE', payload: { date: selectedDate } }]);
+      toast.info('Cleared marks for this session.');
     } catch {
-      toast.error('Failed to save attendance.');
-    } finally {
-      setIsSaving(false);
+      toast.info('Cleared marks for this session.');
     }
   };
 
@@ -152,17 +136,6 @@ function AttendancePage() {
       <PageHeader
         title="Attendance Management"
         subtitle="Mark training sessions with instant auto-save"
-        action={
-          <button
-            onClick={handleSaveAll}
-            disabled={isSaving || Object.keys(marks).length === 0}
-            className="h-10 px-5 rounded-xl font-bold text-xs text-white flex items-center gap-2 cursor-pointer transition active:scale-95 shadow-xs disabled:opacity-50"
-            style={{ background: 'var(--primary)' }}
-          >
-            <Save className="h-4 w-4" />
-            {isSaving ? 'Saving...' : `Save All (${Object.keys(marks).length})`}
-          </button>
-        }
       />
 
       {/* Date Navigator Bar */}

@@ -6,15 +6,10 @@ import {
   Shield,
   CreditCard,
   Award,
-  Users,
-  Eye,
   Database,
   Upload,
   Download,
   Trash2,
-  Plus,
-  X,
-  KeyRound,
 } from 'lucide-react';
 import { db } from '@/lib/db/db';
 import { inr } from '@/lib/format';
@@ -41,14 +36,8 @@ function SettingsPage() {
   const [lateFee, setLateFee] = useState(100);
   const [autoGenFees, setAutoGenFees] = useState(true);
 
-  // Display state
-  const [fontSize, setFontSize] = useState(15);
-  const [zoomLevel, setZoomLevel] = useState(100);
-
-  // Users modal
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  // Modals
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [isChangePinOpen, setIsChangePinOpen] = useState(false);
 
   useEffect(() => {
     const s = db.getSettings();
@@ -89,12 +78,6 @@ function SettingsPage() {
       toast.error('Failed to update settings.');
     }
   };
-
-  // Zoom and font effect
-  useEffect(() => {
-    document.documentElement.style.fontSize = `${fontSize}px`;
-    (document.body.style as any).zoom = `${zoomLevel}%`;
-  }, [fontSize, zoomLevel]);
 
   // Export JSON backup
   const handleExportBackup = () => {
@@ -321,115 +304,7 @@ function SettingsPage() {
         </div>
       </div>
 
-      {/* 4. Admin Users */}
-      <div className="bg-white rounded-2xl border p-6 shadow-2xs space-y-4" style={{ borderColor: 'var(--border)' }}>
-        <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center bg-rose-800 text-white">
-              <Users className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-base text-stone-900">Admin Users</h3>
-              <p className="text-xs text-stone-500">Authorized personnel who can access and manage the system</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setIsAddUserOpen(true)}
-            className="h-8 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-stone-50"
-            style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}
-          >
-            <Plus className="h-3.5 w-3.5" />
-            Add User
-          </button>
-        </div>
-
-        <div className="border rounded-xl overflow-hidden" style={{ borderColor: 'var(--border)' }}>
-          <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 border-b text-stone-500 uppercase font-bold" style={{ borderColor: 'var(--border)' }}>
-              <tr>
-                <th className="py-2.5 px-4">Username</th>
-                <th className="py-2.5 px-4">Role</th>
-                <th className="py-2.5 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-100">
-              <tr className="hover:bg-stone-50">
-                <td className="py-2.5 px-4 font-bold text-stone-900">admin</td>
-                <td className="py-2.5 px-4">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-800 border border-stone-200">
-                    MASTER ADMIN
-                  </span>
-                </td>
-                <td className="py-2.5 px-4 text-right">
-                  <button
-                    onClick={() => setIsChangePinOpen(true)}
-                    className="text-xs font-bold text-stone-600 hover:text-stone-900 inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    <KeyRound className="h-3 w-3" /> Change PIN
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* 5. Display Preferences (Zoom & Font) */}
-      <div className="bg-white rounded-2xl border p-6 shadow-2xs space-y-4" style={{ borderColor: 'var(--border)' }}>
-        <div className="flex items-center gap-3 pb-3 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div className="h-9 w-9 rounded-xl flex items-center justify-center bg-stone-600 text-white">
-            <Eye className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="font-bold text-base text-stone-900">Display & Zoom</h3>
-            <p className="text-xs text-stone-500">Fine-tune UI scale for large monitors or compact POS screens</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-          <div>
-            <div className="flex justify-between font-bold text-stone-700 mb-2">
-              <span>Font Size</span>
-              <span className="font-mono text-stone-900">{fontSize}px</span>
-            </div>
-            <input
-              type="range"
-              min={13}
-              max={22}
-              value={fontSize}
-              onChange={(e) => setFontSize(Number(e.target.value))}
-              className="w-full cursor-pointer accent-[var(--primary)]"
-            />
-            <div className="flex justify-between text-[10px] text-stone-400 mt-1">
-              <span>13px (Compact)</span>
-              <span>22px (Large)</span>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between font-bold text-stone-700 mb-2">
-              <span>Zoom Scale</span>
-              <span className="font-mono text-stone-900">{zoomLevel}%</span>
-            </div>
-            <input
-              type="range"
-              min={75}
-              max={140}
-              step={5}
-              value={zoomLevel}
-              onChange={(e) => setZoomLevel(Number(e.target.value))}
-              className="w-full cursor-pointer accent-[var(--primary)]"
-            />
-            <div className="flex justify-between text-[10px] text-stone-400 mt-1">
-              <span>75%</span>
-              <span>100% (Default)</span>
-              <span>140%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. Data Management & Backup */}
+      {/* 4. Data Management & Backup */}
       <div className="bg-white rounded-2xl border p-6 shadow-2xs space-y-4" style={{ borderColor: 'var(--border)' }}>
         <div className="flex items-center gap-3 pb-3 border-b" style={{ borderColor: 'var(--border)' }}>
           <div className="h-9 w-9 rounded-xl flex items-center justify-center bg-emerald-700 text-white">
@@ -506,77 +381,6 @@ function SettingsPage() {
           onCancel={() => setIsResetConfirmOpen(false)}
         />
       )}
-
-      {/* Change PIN Modal */}
-      {isChangePinOpen && (
-        <ChangePinModal onClose={() => setIsChangePinOpen(false)} />
-      )}
-    </div>
-  );
-}
-
-// Modal for changing PIN
-function ChangePinModal({ onClose }: { onClose: () => void }) {
-  const [pin, setPin] = useState('');
-  const [confirmPin, setConfirmPin] = useState('');
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin.length < 4) return toast.error('PIN must be at least 4 digits');
-    if (pin !== confirmPin) return toast.error('PINs do not match');
-
-    db.changeAdminPin(pin);
-    toast.success('Admin PIN updated successfully!');
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white rounded-2xl shadow-xl border p-6 max-w-xs w-full" style={{ borderColor: 'var(--border)' }}>
-        <h3 className="text-base font-black text-stone-900 mb-4">Change Admin PIN</h3>
-        <form onSubmit={handleSave} className="space-y-3 text-xs">
-          <div>
-            <label className="block font-bold text-stone-700 mb-1">New PIN (4–6 digits)</label>
-            <input
-              type="password"
-              maxLength={6}
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              className="w-full h-10 px-3 rounded-xl border text-center font-mono text-xl"
-              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-              autoFocus
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-stone-700 mb-1">Confirm New PIN</label>
-            <input
-              type="password"
-              maxLength={6}
-              value={confirmPin}
-              onChange={(e) => setConfirmPin(e.target.value)}
-              className="w-full h-10 px-3 rounded-xl border text-center font-mono text-xl"
-              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-            />
-          </div>
-          <div className="flex gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 h-9 rounded-xl border font-semibold text-xs"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-1 h-9 rounded-xl text-white font-bold text-xs"
-              style={{ background: 'var(--primary)' }}
-            >
-              Update PIN
-            </button>
-          </div>
-        </form>
-      </div>
     </div>
   );
 }

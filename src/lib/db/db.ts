@@ -9,6 +9,7 @@ export type Mutation =
   | { type: 'DELETE_STUDENT'; payload: { id: string } }
   | { type: 'UPSERT_ATTENDANCE'; payload: AttendanceRecord }
   | { type: 'BULK_ATTENDANCE'; payload: AttendanceRecord[] }
+  | { type: 'CLEAR_ATTENDANCE_DATE'; payload: { date: string } }
   | { type: 'PAY_FEE'; payload: Partial<FeeRecord> & { id: string } }
   | { type: 'CREATE_FEE'; payload: FeeRecord }
   | { type: 'LOG_WHATSAPP'; payload: WhatsAppLog }
@@ -193,14 +194,58 @@ class Db {
       if (!res.ok) return;
       const data: DbStore = await res.json();
       if (data && typeof data === 'object') {
+        // Safe merge without wiping local database
+        const mergedStudents = [...this.store.students];
+        if (Array.isArray(data.students)) {
+          for (const s of data.students) {
+            const idx = mergedStudents.findIndex((x) => x.id === s.id);
+            if (idx >= 0) {
+              mergedStudents[idx] = { ...mergedStudents[idx], ...s };
+            } else {
+              mergedStudents.push(s);
+            }
+          }
+        }
+
+        const mergedAttendance = [...this.store.attendance];
+        if (Array.isArray(data.attendance)) {
+          for (const a of data.attendance) {
+            const idx = mergedAttendance.findIndex(
+              (x) => x.student_id === a.student_id && x.date === a.date
+            );
+            if (idx >= 0) {
+              mergedAttendance[idx] = { ...mergedAttendance[idx], ...a };
+            } else {
+              mergedAttendance.push(a);
+            }
+          }
+        }
+
+        const mergedFees = [...this.store.fees];
+        if (Array.isArray(data.fees)) {
+          for (const f of data.fees) {
+            const idx = mergedFees.findIndex(
+              (x) => x.student_id === f.student_id && x.month === f.month
+            );
+            if (idx >= 0) {
+              // Only overwrite local if server has equal or more payment recorded
+              if ((f.amount_paid || 0) >= (mergedFees[idx].amount_paid || 0)) {
+                mergedFees[idx] = { ...mergedFees[idx], ...f };
+              }
+            } else {
+              mergedFees.push(f);
+            }
+          }
+        }
+
         this.store = {
-          students: data.students || this.store.students,
-          attendance: data.attendance || this.store.attendance,
-          fees: data.fees || this.store.fees,
+          students: mergedStudents,
+          attendance: mergedAttendance,
+          fees: mergedFees,
           settings: data.settings || this.store.settings || DEFAULT_SETTINGS,
           beltLevels: data.beltLevels?.length ? data.beltLevels : this.store.beltLevels,
-          whatsappLog: data.whatsappLog || this.store.whatsappLog,
-          users: data.users || this.store.users,
+          whatsappLog: data.whatsappLog?.length ? data.whatsappLog : this.store.whatsappLog,
+          users: data.users?.length ? data.users : this.store.users,
         };
         await this.persistStore();
         this.notify();
@@ -273,6 +318,10 @@ class Db {
               this.store.attendance.push(rec);
             }
           }
+          break;
+        }
+        case 'CLEAR_ATTENDANCE_DATE': {
+          this.store.attendance = this.store.attendance.filter((a) => a.date !== m.payload.date);
           break;
         }
         case 'CREATE_FEE': {
@@ -376,7 +425,17 @@ class Db {
     await this.persistStore();
     this.notify();
 
-    // Try posting to server in background
+    // Sync payment to server SQLite in background
+    try {
+      await fetch('/api/db/push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mutations: [{ type: 'PAY_FEE', payload: fee }],
+        }),
+      });
+    } catch {}
+
     try {
       await fetch('/api/fees/pay', {
         method: 'POST',

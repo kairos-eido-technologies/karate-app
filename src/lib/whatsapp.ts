@@ -12,7 +12,7 @@ export function buildReminderMessage(opts: {
   month: string;
   phone: string;
 }): string {
-  return `Dear ${opts.parentName || opts.studentName},\nThis is a friendly reminder from ${opts.academyName}.\nYour monthly training fee of \u20B9${opts.amount} for ${opts.month} is pending.\nPlease pay at the earliest to avoid any interruption in training.\nAcademy Contact: ${opts.phone}\nThank you,\n${opts.academyName}`;
+  return `Dear ${opts.parentName || opts.studentName},\nThis is a friendly reminder from ${opts.academyName}.\nYour monthly training fee of \u20B9${opts.amount} for ${opts.month} is pending.\nPlease pay at the earliest.\nAcademy Contact: ${opts.phone}\nThank you,\n${opts.academyName}`;
 }
 
 export function buildReceiptMessage(opts: {

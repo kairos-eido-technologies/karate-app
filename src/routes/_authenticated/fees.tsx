@@ -63,29 +63,14 @@ function FeesPage() {
     setSelectedMonth(format(addMonths(monthDate, 1), 'yyyy-MM'));
   };
 
-  // Generate fees for current month if empty
-  const handleAutoGenerate = async () => {
-    try {
-      const mutations = students.map((s) => ({
-        type: 'CREATE_FEE' as const,
-        payload: {
-          id: crypto.randomUUID(),
-          student_id: s.id,
-          month: selectedMonth,
-          amount_due: s.monthly_fee || 1500,
-          amount_paid: 0,
-          payment_status: 'UNPAID' as const,
-        },
-      }));
-      await db.push(mutations);
-      toast.success(`Generated fee ledgers for ${students.length} students!`);
-    } catch {
-      toast.error('Failed to generate fee ledger.');
-    }
-  };
+  // Filter active students: only show dues from the student's enrollment month onwards
+  const eligibleStudents = students.filter((student) => {
+    const enrollMonth = student.enrollment_date ? student.enrollment_date.slice(0, 7) : '1970-01';
+    return enrollMonth <= selectedMonth;
+  });
 
-  // Merge active students with their fee record for this month
-  const studentFeeRows = students.map((student) => {
+  // Merge eligible students with their fee record for this month
+  const studentFeeRows = eligibleStudents.map((student) => {
     let fee = monthFees.find((f) => f.student_id === student.id);
     if (!fee) {
       fee = {
@@ -171,18 +156,6 @@ function FeesPage() {
       <PageHeader
         title="Fee Management & Ledger"
         subtitle="Track monthly student tuition fees and issue instant digital receipts"
-        action={
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleAutoGenerate}
-              className="h-10 px-4 rounded-xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition active:scale-95 bg-white hover:bg-stone-50"
-              style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}
-            >
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              Generate Month Roster
-            </button>
-          </div>
-        }
       />
 
       {/* KPI Summary (4 cards) */}

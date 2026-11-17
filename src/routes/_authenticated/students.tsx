@@ -533,7 +533,13 @@ function StudentModal({
   const [name, setName] = useState(student?.name || '');
   const [dob, setDob] = useState(student?.dob || '');
   const [beltLevelId, setBeltLevelId] = useState(student?.belt_level_id || beltLevels[0]?.id || 1);
-  const [monthlyFee, setMonthlyFee] = useState(student?.monthly_fee || defaultFee);
+  const [monthlyFee, setMonthlyFee] = useState<string | number>(
+    student?.monthly_fee !== undefined
+      ? student.monthly_fee
+      : defaultFee && defaultFee > 0
+      ? defaultFee
+      : ''
+  );
   const [phone, setPhone] = useState(student?.phone || '');
   const [parentName, setParentName] = useState(student?.parent_name || '');
   const [parentPhone, setParentPhone] = useState(student?.parent_phone || '');
@@ -546,6 +552,10 @@ function StudentModal({
     e.preventDefault();
     if (!name.trim()) return toast.error('Student Name is required');
     if (!parentPhone.trim()) return toast.error('Parent WhatsApp Number is required');
+    const feeNum = Number(monthlyFee);
+    if (!monthlyFee || isNaN(feeNum) || feeNum <= 0) {
+      return toast.error('Please enter a valid monthly fee amount');
+    }
 
     setLoading(true);
     try {
@@ -554,7 +564,7 @@ function StudentModal({
         name: name.trim(),
         dob: dob || undefined,
         belt_level_id: Number(beltLevelId),
-        monthly_fee: Number(monthlyFee),
+        monthly_fee: feeNum,
         phone: phone.trim(),
         parent_name: parentName.trim(),
         parent_phone: parentPhone.trim(),
@@ -626,8 +636,9 @@ function StudentModal({
               <input
                 type="number"
                 required
+                min={1}
                 value={monthlyFee}
-                onChange={(e) => setMonthlyFee(Number(e.target.value))}
+                onChange={(e) => setMonthlyFee(e.target.value === '' ? '' : e.target.value)}
                 className="w-full h-10 px-3 rounded-xl border text-sm font-mono font-bold"
                 style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
               />
@@ -655,7 +666,7 @@ function StudentModal({
               />
             </div>
 
-            <div>
+            <div className="col-span-1 sm:col-span-2">
               <label className="block font-bold text-stone-700 mb-1">Parent / Guardian Name *</label>
               <input
                 type="text"
@@ -668,7 +679,7 @@ function StudentModal({
               />
             </div>
 
-            <div>
+            <div className="col-span-1 sm:col-span-2">
               <label className="block font-bold text-stone-700 mb-1">Parent WhatsApp Number *</label>
               <input
                 type="text"

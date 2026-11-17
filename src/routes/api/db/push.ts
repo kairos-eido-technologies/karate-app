@@ -40,18 +40,31 @@ export const APIRoute = createAPIFileRoute('/api/db/push')({
               }
               break;
             case 'PAY_FEE':
-              sqlite.prepare(`
-                UPDATE fees
-                SET amount_paid=@amount_paid, payment_status=@payment_status, payment_date=@payment_date,
-                    payment_mode=@payment_mode, receipt_number=@receipt_number, notes=@notes, updated_at=datetime('now')
-                WHERE id=@id
-              `).run(m.payload);
-              break;
             case 'CREATE_FEE':
               sqlite.prepare(`
-                INSERT OR IGNORE INTO fees(id, student_id, month, amount_due, amount_paid, payment_status)
-                VALUES(@id, @student_id, @month, @amount_due, @amount_paid, @payment_status)
-              `).run(m.payload);
+                INSERT INTO fees(id, student_id, month, amount_due, amount_paid, payment_status, payment_date, payment_mode, receipt_number, notes)
+                VALUES(@id, @student_id, @month, @amount_due, @amount_paid, @payment_status, @payment_date, @payment_mode, @receipt_number, @notes)
+                ON CONFLICT(id) DO UPDATE SET
+                  amount_due=excluded.amount_due,
+                  amount_paid=excluded.amount_paid,
+                  payment_status=excluded.payment_status,
+                  payment_date=excluded.payment_date,
+                  payment_mode=excluded.payment_mode,
+                  receipt_number=excluded.receipt_number,
+                  notes=excluded.notes,
+                  updated_at=datetime('now')
+              `).run({
+                id: m.payload.id,
+                student_id: m.payload.student_id,
+                month: m.payload.month,
+                amount_due: m.payload.amount_due || 1500,
+                amount_paid: m.payload.amount_paid || 0,
+                payment_status: m.payload.payment_status || 'UNPAID',
+                payment_date: m.payload.payment_date || null,
+                payment_mode: m.payload.payment_mode || 'CASH',
+                receipt_number: m.payload.receipt_number || null,
+                notes: m.payload.notes || '',
+              });
               break;
             case 'LOG_WHATSAPP':
               sqlite.prepare(`

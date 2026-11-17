@@ -11,8 +11,8 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 const DESKTOP_NAV = [
-  { to: "/apps" as const, label: "Apps", icon: LayoutGrid },
   { to: "/dashboard" as const, label: "Dashboard", icon: Home },
+  { to: "/apps" as const, label: "Apps", icon: LayoutGrid },
   { to: "/students" as const, label: "Students", icon: Users },
   { to: "/attendance" as const, label: "Attendance", icon: CalendarCheck },
   { to: "/fees" as const, label: "Fees", icon: IndianRupee },
@@ -20,7 +20,7 @@ const DESKTOP_NAV = [
 ];
 
 const MOBILE_NAV = [
-  { to: "/apps" as const, label: "Home", icon: LayoutGrid },
+  { to: "/dashboard" as const, label: "Home", icon: Home },
   { to: "/students" as const, label: "Students", icon: Users },
   { to: "/attendance" as const, label: "Attendance", icon: CalendarCheck },
   { to: "/fees" as const, label: "Fees", icon: IndianRupee },
@@ -45,7 +45,7 @@ function AuthenticatedLayout() {
       <header
         className="h-14 sticky top-0 z-30 flex items-center justify-between px-3 md:px-6 bg-white/95 backdrop-blur-md border-b border-[var(--border)] shadow-2xs"
       >
-        <Link to="/apps" className="flex items-center gap-2.5 cursor-pointer group">
+        <Link to="/dashboard" className="flex items-center gap-2.5 cursor-pointer group">
           <div
             className="h-9 w-9 rounded-xl flex items-center justify-center border border-[var(--border)] transition group-hover:scale-105 shadow-2xs"
             style={{ background: "var(--primary)" }}
