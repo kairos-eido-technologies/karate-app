@@ -1,0 +1,11 @@
+export const BELT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  White:  { bg: "#F8F8F8", text: "#374151", border: "#D1D5DB" },
+  Yellow: { bg: "#FEF9C3", text: "#713F12", border: "#FDE047" },
+  Orange: { bg: "#FED7AA", text: "#7C2D12", border: "#FB923C" },
+  Green:  { bg: "#DCFCE7", text: "#14532D", border: "#4ADE80" },
+  Blue:   { bg: "#DBEAFE", text: "#1E3A5F", border: "#60A5FA" },
+  Purple: { bg: "#EDE9FE", text: "#3B0764", border: "#A78BFA" },
+  Red:    { bg: "#FEE2E2", text: "#7F1D1D", border: "#F87171" },
+  Brown:  { bg: "#FEF3C7", text: "#78350F", border: "#D97706" },
+  Black:  { bg: "#1F2937", text: "#F9FAFB", border: "#374151" },
+};

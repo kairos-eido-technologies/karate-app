@@ -1,0 +1,350 @@
+{
+  "C:/Users/Darish Jerlin J/ket/karate/src/styles.css": {
+    "file": "assets/styles-BRPRsaOM.css",
+    "src": "C:/Users/Darish Jerlin J/ket/karate/src/styles.css"
+  },
+  "_BarChart-Bkq4SwoL.js": {
+    "file": "assets/BarChart-Bkq4SwoL.js",
+    "name": "BarChart",
+    "imports": [
+      "_client-B0ap351j.js"
+    ]
+  },
+  "_BeltBadge-2aMqyjX0.js": {
+    "file": "assets/BeltBadge-2aMqyjX0.js",
+    "name": "BeltBadge",
+    "imports": [
+      "_client-B0ap351j.js"
+    ]
+  },
+  "_ConfirmModal-w_3Qs_57.js": {
+    "file": "assets/ConfirmModal-w_3Qs_57.js",
+    "name": "ConfirmModal",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js",
+      "_client-B0ap351j.js"
+    ]
+  },
+  "_FeeReceiptModal-CkgOtfqi.js": {
+    "file": "assets/FeeReceiptModal-CkgOtfqi.js",
+    "name": "FeeReceiptModal",
+    "imports": [
+      "_format-CoGx_-8E.js",
+      "_client-B0ap351j.js",
+      "_clock-DZ-kFDyg.js",
+      "_circle-alert-CNM2L7Yj.js",
+      "_format-CbXXJSFv.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_shield-D4-64Pua.js"
+    ]
+  },
+  "_PageHeader-BXiMRPfC.js": {
+    "file": "assets/PageHeader-BXiMRPfC.js",
+    "name": "PageHeader",
+    "imports": [
+      "_client-B0ap351j.js"
+    ]
+  },
+  "_check-DTSC_HRd.js": {
+    "file": "assets/check-DTSC_HRd.js",
+    "name": "check",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_chevron-right-DcL5psQw.js": {
+    "file": "assets/chevron-right-DcL5psQw.js",
+    "name": "chevron-right",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_circle-alert-CNM2L7Yj.js": {
+    "file": "assets/circle-alert-CNM2L7Yj.js",
+    "name": "circle-alert",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_client-B0ap351j.js": {
+    "file": "assets/client-B0ap351j.js",
+    "name": "client",
+    "dynamicImports": [
+      "src/routes/login.tsx?tsr-split=component",
+      "src/routes/_authenticated.tsx?tsr-split=component",
+      "src/routes/index.tsx?tsr-split=component",
+      "src/routes/_authenticated/students.tsx?tsr-split=component",
+      "src/routes/_authenticated/settings.tsx?tsr-split=component",
+      "src/routes/_authenticated/reports.tsx?tsr-split=component",
+      "src/routes/_authenticated/fees.tsx?tsr-split=component",
+      "src/routes/_authenticated/dashboard.tsx?tsr-split=component",
+      "src/routes/_authenticated/attendance.tsx?tsr-split=component",
+      "src/routes/_authenticated/apps.tsx?tsr-split=component"
+    ],
+    "assets": [
+      "assets/styles-BRPRsaOM.css"
+    ]
+  },
+  "_clock-DZ-kFDyg.js": {
+    "file": "assets/clock-DZ-kFDyg.js",
+    "name": "clock",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_createLucideIcon-DddEzrht.js": {
+    "file": "assets/createLucideIcon-DddEzrht.js",
+    "name": "createLucideIcon",
+    "imports": [
+      "_client-B0ap351j.js"
+    ]
+  },
+  "_credit-card-8fNIfVAc.js": {
+    "file": "assets/credit-card-8fNIfVAc.js",
+    "name": "credit-card",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_download-D8w46_tN.js": {
+    "file": "assets/download-D8w46_tN.js",
+    "name": "download",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_format-CbXXJSFv.js": {
+    "file": "assets/format-CbXXJSFv.js",
+    "name": "format",
+    "imports": [
+      "_format-CoGx_-8E.js"
+    ]
+  },
+  "_format-CoGx_-8E.js": {
+    "file": "assets/format-CoGx_-8E.js",
+    "name": "format"
+  },
+  "_indian-rupee-DXT0oAS0.js": {
+    "file": "assets/indian-rupee-DXT0oAS0.js",
+    "name": "indian-rupee",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_message-square-BVzPFiuf.js": {
+    "file": "assets/message-square-BVzPFiuf.js",
+    "name": "message-square",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_save-D5vyqbRS.js": {
+    "file": "assets/save-D5vyqbRS.js",
+    "name": "save",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_search-HOfHJRZW.js": {
+    "file": "assets/search-HOfHJRZW.js",
+    "name": "search",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_settings-BwyyreEA.js": {
+    "file": "assets/settings-BwyyreEA.js",
+    "name": "settings",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_shield-D4-64Pua.js": {
+    "file": "assets/shield-D4-64Pua.js",
+    "name": "shield",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "_subDays-D4D3Oknu.js": {
+    "file": "assets/subDays-D4D3Oknu.js",
+    "name": "subDays",
+    "imports": [
+      "_format-CoGx_-8E.js"
+    ]
+  },
+  "_users-CAXRfwVC.js": {
+    "file": "assets/users-CAXRfwVC.js",
+    "name": "users",
+    "imports": [
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "src/routes/_authenticated.tsx?tsr-split=component": {
+    "file": "assets/_authenticated-Cc3kCLi1.js",
+    "name": "_authenticated",
+    "src": "src/routes/_authenticated.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_shield-D4-64Pua.js",
+      "_settings-BwyyreEA.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_users-CAXRfwVC.js",
+      "_indian-rupee-DXT0oAS0.js"
+    ]
+  },
+  "src/routes/_authenticated/apps.tsx?tsr-split=component": {
+    "file": "assets/apps-y2fPgMqd.js",
+    "name": "apps",
+    "src": "src/routes/_authenticated/apps.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_settings-BwyyreEA.js",
+      "_users-CAXRfwVC.js",
+      "_indian-rupee-DXT0oAS0.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_search-HOfHJRZW.js"
+    ]
+  },
+  "src/routes/_authenticated/attendance.tsx?tsr-split=component": {
+    "file": "assets/attendance-BAReiiGI.js",
+    "name": "attendance",
+    "src": "src/routes/_authenticated/attendance.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_format-CoGx_-8E.js",
+      "_save-D5vyqbRS.js",
+      "_clock-DZ-kFDyg.js",
+      "_chevron-right-DcL5psQw.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_circle-alert-CNM2L7Yj.js",
+      "_check-DTSC_HRd.js",
+      "_search-HOfHJRZW.js",
+      "_subDays-D4D3Oknu.js"
+    ]
+  },
+  "src/routes/_authenticated/dashboard.tsx?tsr-split=component": {
+    "file": "assets/dashboard-WWGXMuEW.js",
+    "name": "dashboard",
+    "src": "src/routes/_authenticated/dashboard.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_format-CbXXJSFv.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_subDays-D4D3Oknu.js",
+      "_format-CoGx_-8E.js",
+      "_users-CAXRfwVC.js",
+      "_indian-rupee-DXT0oAS0.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_circle-alert-CNM2L7Yj.js",
+      "_credit-card-8fNIfVAc.js",
+      "_BarChart-Bkq4SwoL.js"
+    ]
+  },
+  "src/routes/_authenticated/fees.tsx?tsr-split=component": {
+    "file": "assets/fees-3PMHs8qi.js",
+    "name": "fees",
+    "src": "src/routes/_authenticated/fees.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_format-CbXXJSFv.js",
+      "_FeeReceiptModal-CkgOtfqi.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_clock-DZ-kFDyg.js",
+      "_chevron-right-DcL5psQw.js",
+      "_search-HOfHJRZW.js",
+      "_message-square-BVzPFiuf.js",
+      "_format-CoGx_-8E.js",
+      "_circle-alert-CNM2L7Yj.js",
+      "_shield-D4-64Pua.js"
+    ]
+  },
+  "src/routes/_authenticated/reports.tsx?tsr-split=component": {
+    "file": "assets/reports-DLWfggX_.js",
+    "name": "reports",
+    "src": "src/routes/_authenticated/reports.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_format-CbXXJSFv.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_download-D8w46_tN.js",
+      "_BarChart-Bkq4SwoL.js",
+      "_message-square-BVzPFiuf.js",
+      "_format-CoGx_-8E.js",
+      "_createLucideIcon-DddEzrht.js"
+    ]
+  },
+  "src/routes/_authenticated/settings.tsx?tsr-split=component": {
+    "file": "assets/settings-BNKq6LPm.js",
+    "name": "settings",
+    "src": "src/routes/_authenticated/settings.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_ConfirmModal-w_3Qs_57.js",
+      "_shield-D4-64Pua.js",
+      "_save-D5vyqbRS.js",
+      "_credit-card-8fNIfVAc.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_users-CAXRfwVC.js",
+      "_download-D8w46_tN.js"
+    ]
+  },
+  "src/routes/_authenticated/students.tsx?tsr-split=component": {
+    "file": "assets/students-3BiJOgA4.js",
+    "name": "students",
+    "src": "src/routes/_authenticated/students.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-B0ap351j.js",
+      "_format-CbXXJSFv.js",
+      "_FeeReceiptModal-CkgOtfqi.js",
+      "_PageHeader-BXiMRPfC.js",
+      "_BeltBadge-2aMqyjX0.js",
+      "_ConfirmModal-w_3Qs_57.js",
+      "_search-HOfHJRZW.js",
+      "_check-DTSC_HRd.js",
+      "_clock-DZ-kFDyg.js",
+      "_createLucideIcon-DddEzrht.js",
+      "_message-square-BVzPFiuf.js",
+      "_format-CoGx_-8E.js",
+      "_circle-alert-CNM2L7Yj.js",
+      "_shield-D4-64Pua.js"
+    ]
+  },
+  "src/routes/index.tsx?tsr-split=component": {
+    "file": "assets/routes-DtqBFgK5.js",
+    "name": "routes",
+    "src": "src/routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "src/routes/login.tsx?tsr-split=component": {
+    "file": "assets/login-DtqBFgK5.js",
+    "name": "login",
+    "src": "src/routes/login.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "virtual:$vinxi/handler/client": {
+    "file": "assets/client-DpH71j-l.js",
+    "name": "client",
+    "src": "virtual:$vinxi/handler/client",
+    "isEntry": true,
+    "imports": [
+      "_client-B0ap351j.js"
+    ]
+  }
+}

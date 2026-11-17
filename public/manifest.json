@@ -1,0 +1,18 @@
+{
+  "name": "Dojo Manager — Karate Academy",
+  "short_name": "DojoManager",
+  "description": "Karate Academy Management System: Attendance, Fees & Student Ledger",
+  "start_url": "/apps",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#8B1A1A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

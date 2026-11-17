@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Vinxi / Nitro Build outputs
+.output/
+.vinxi/
+app.config.timestamp_*.js
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Android build outputs & caches
+.gradle/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk.idsig
+
+# SQLite WAL / temporary cache files (keep initial schema if needed, but ignore lock/wal)
+data/*.db-shm
+data/*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db

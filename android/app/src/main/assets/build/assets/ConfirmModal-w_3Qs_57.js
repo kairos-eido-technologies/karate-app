@@ -1,0 +1,11 @@
+import{c as o}from"./createLucideIcon-DddEzrht.js";import{j as e}from"./client-B0ap351j.js";/**
+ * @license lucide-react v0.477.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const c=[["path",{d:"M5 12h14",key:"1ays0h"}],["path",{d:"M12 5v14",key:"s699le"}]],m=o("Plus",c);/**
+ * @license lucide-react v0.477.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const i=[["path",{d:"M3 6h18",key:"d0wm0j"}],["path",{d:"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6",key:"4alrt4"}],["path",{d:"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2",key:"v07s0e"}],["line",{x1:"10",x2:"10",y1:"11",y2:"17",key:"1uufr5"}],["line",{x1:"14",x2:"14",y1:"11",y2:"17",key:"xtxkd"}]],h=o("Trash2",i);function u({title:s,message:t,confirmLabel:a="Confirm",onConfirm:l,onCancel:n,destructive:r=!1}){return e.jsx("div",{className:"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in",children:e.jsxs("div",{className:"bg-white rounded-2xl shadow-xl border p-6 max-w-sm w-full animate-in zoom-in-95",style:{borderColor:"var(--border)"},children:[e.jsx("h3",{className:"text-lg font-black tracking-tight mb-2",style:{color:r?"var(--destructive)":"var(--foreground)"},children:s}),e.jsx("p",{className:"text-sm font-medium mb-6 leading-relaxed",style:{color:"var(--muted-foreground)"},children:t}),e.jsxs("div",{className:"flex gap-3",children:[e.jsx("button",{onClick:n,className:"flex-1 h-10 rounded-xl border font-semibold text-sm cursor-pointer transition active:scale-95 hover:bg-black/5",style:{borderColor:"var(--border)",color:"var(--foreground)"},children:"Cancel"}),e.jsx("button",{onClick:l,className:"flex-1 h-10 rounded-xl font-bold text-sm text-white cursor-pointer transition active:scale-95 shadow-xs",style:{background:r?"var(--destructive)":"var(--primary)"},children:a})]})]})})}export{u as C,m as P,h as T};
