@@ -1,7 +1,9 @@
-import { Printer, Share2, X, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { Printer, Share2, X, Shield, Image as ImageIcon } from 'lucide-react';
 import { inr, fmtDate, fmtMonth } from '@/lib/format';
-import { openWhatsApp, buildReceiptMessage } from '@/lib/whatsapp';
+import { shareReceiptToWhatsApp } from '@/lib/receipt-image';
 import { BeltBadge } from './BeltBadge';
+import { toast } from 'sonner';
 import type { FeeRecord, Student, Settings, BeltLevel } from '@/lib/db/types';
 
 interface FeeReceiptModalProps {
@@ -13,6 +15,7 @@ interface FeeReceiptModalProps {
 }
 
 export function FeeReceiptModal({ fee, student, settings, belt, onClose }: FeeReceiptModalProps) {
+  const [isSharing, setIsSharing] = useState(false);
   const academyName = settings?.academy_name || 'Dojo Master Academy';
   const address = settings?.address || '123 Karate Street, City 600001';
   const phone = settings?.phone || '9876543210';
@@ -24,19 +27,16 @@ export function FeeReceiptModal({ fee, student, settings, belt, onClose }: FeeRe
     window.print();
   };
 
-  const handleShareWhatsApp = () => {
-    const msg = buildReceiptMessage({
-      academyName,
-      studentName: student.name,
-      receiptNo,
-      month: monthName,
-      amount: fee.amount_paid,
-      mode: fee.payment_mode || 'CASH',
-      date: paymentDate,
-      address,
-      phone: settings?.whatsapp_number || phone,
-    });
-    openWhatsApp(student.parent_phone, msg);
+  const handleShareWhatsApp = async () => {
+    setIsSharing(true);
+    try {
+      await shareReceiptToWhatsApp({ fee, student, settings, belt });
+      toast.success('Sharing receipt image to WhatsApp...');
+    } catch (err: any) {
+      toast.error('Failed to generate receipt image: ' + (err?.message || 'Error'));
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   return (
@@ -142,11 +142,12 @@ export function FeeReceiptModal({ fee, student, settings, belt, onClose }: FeeRe
           </button>
           <button
             onClick={handleShareWhatsApp}
-            className="flex-1 h-10 rounded-xl text-white flex items-center justify-center gap-2 text-xs font-bold cursor-pointer transition active:scale-95 shadow-xs"
+            disabled={isSharing}
+            className="flex-1 h-10 rounded-xl text-white flex items-center justify-center gap-2 text-xs font-bold cursor-pointer transition active:scale-95 shadow-xs disabled:opacity-50"
             style={{ background: '#25D366' }}
           >
             <Share2 className="h-4 w-4" />
-            WhatsApp
+            {isSharing ? 'Sending Image...' : 'WhatsApp Image'}
           </button>
           <button
             onClick={onClose}

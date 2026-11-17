@@ -20,6 +20,7 @@ import { format, subMonths, addMonths } from 'date-fns';
 import { db } from '@/lib/db/db';
 import { inr, fmtDate, fmtMonth } from '@/lib/format';
 import { openWhatsApp, buildReminderMessage, buildReceiptMessage } from '@/lib/whatsapp';
+import { shareReceiptToWhatsApp } from '@/lib/receipt-image';
 import { PageHeader } from '@/components/PageHeader';
 import { BeltBadge } from '@/components/BeltBadge';
 import { StatusBadge, FeeStatus } from '@/components/StatusBadge';
@@ -543,18 +544,13 @@ function CollectFeeModal({
 
       // If WhatsApp receipt checked
       if (sendWhatsApp) {
-        const msg = buildReceiptMessage({
-          academyName: settings?.academy_name || 'Dojo Master Academy',
-          studentName: student.name,
-          receiptNo: result.receipt_number,
-          month: fmtMonth(month),
-          amount: Number(amountReceived),
-          mode: paymentMode,
-          date: fmtDate(new Date().toISOString()),
-          address: settings?.address || '',
-          phone: settings?.phone || '',
+        const belt = db.getBeltLevels().find((b) => b.id === student.belt_level_id);
+        await shareReceiptToWhatsApp({
+          fee: result.fee,
+          student,
+          settings,
+          belt,
         });
-        openWhatsApp(student.parent_phone, msg);
       }
 
       onClose();

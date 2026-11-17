@@ -149,6 +149,53 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        @android.webkit.JavascriptInterface
+        public void shareReceiptImage(String dataUrl, String filename, String phoneNumber, String caption) {
+            activity.runOnUiThread(() -> {
+                try {
+                    String base64Data = dataUrl;
+                    if (base64Data.contains(",")) {
+                        base64Data = base64Data.substring(base64Data.indexOf(",") + 1);
+                    }
+                    byte[] imageBytes = android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT);
+
+                    File cacheDir = new File(activity.getCacheDir(), "receipts");
+                    if (!cacheDir.exists()) cacheDir.mkdirs();
+                    File file = new File(cacheDir, filename);
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        fos.write(imageBytes);
+                        fos.flush();
+                    }
+
+                    Uri contentUri = androidx.core.content.FileProvider.getUriForFile(
+                        activity,
+                        activity.getPackageName() + ".fileprovider",
+                        file
+                    );
+
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("image/png");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                    if (caption != null && !caption.isEmpty()) {
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, caption);
+                    }
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    // Open directly in WhatsApp if available, otherwise show share chooser
+                    shareIntent.setPackage("com.whatsapp");
+                    try {
+                        activity.startActivity(shareIntent);
+                    } catch (Exception e) {
+                        shareIntent.setPackage(null);
+                        activity.startActivity(Intent.createChooser(shareIntent, "Share Receipt"));
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to share receipt image", e);
+                    Toast.makeText(activity, "Share receipt error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
