@@ -601,20 +601,22 @@ function StudentModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="block font-bold text-stone-700 mb-1">Student Full Name *</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Student Full Name"
-                className="w-full h-10 px-3 rounded-xl border text-sm"
-                style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-              />
-            </div>
+          {/* Student Full Name - Full Line */}
+          <div>
+            <label className="block font-bold text-stone-700 mb-1">Student Full Name *</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Student Full Name"
+              className="w-full h-10 px-3 rounded-xl border text-sm"
+              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
+            />
+          </div>
 
+          {/* Belt Level & Monthly Fee */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-stone-700 mb-1">Belt Level *</label>
               <select
@@ -643,7 +645,10 @@ function StudentModal({
                 style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
               />
             </div>
+          </div>
 
+          {/* Date of Birth & Enrollment Date */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-stone-700 mb-1">Date of Birth</label>
               <input
@@ -665,33 +670,38 @@ function StudentModal({
                 style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
               />
             </div>
+          </div>
 
-            <div className="col-span-1 sm:col-span-2">
-              <label className="block font-bold text-stone-700 mb-1">Parent / Guardian Name *</label>
-              <input
-                type="text"
-                required
-                value={parentName}
-                onChange={(e) => setParentName(e.target.value)}
-                placeholder="Parent / Guardian Name"
-                className="w-full h-10 px-3 rounded-xl border text-xs"
-                style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-              />
-            </div>
+          {/* Parent Name - Standalone Full Line */}
+          <div>
+            <label className="block font-bold text-stone-700 mb-1">Parent / Guardian Name *</label>
+            <input
+              type="text"
+              required
+              value={parentName}
+              onChange={(e) => setParentName(e.target.value)}
+              placeholder="Parent / Guardian Name"
+              className="w-full h-10 px-3 rounded-xl border text-xs"
+              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
+            />
+          </div>
 
-            <div className="col-span-1 sm:col-span-2">
-              <label className="block font-bold text-stone-700 mb-1">Parent WhatsApp Number *</label>
-              <input
-                type="text"
-                required
-                value={parentPhone}
-                onChange={(e) => setParentPhone(e.target.value)}
-                placeholder="10-digit mobile number"
-                className="w-full h-10 px-3 rounded-xl border text-xs font-mono"
-                style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-              />
-            </div>
+          {/* Parent WhatsApp Number - Standalone Next Line */}
+          <div>
+            <label className="block font-bold text-stone-700 mb-1">Parent WhatsApp Number *</label>
+            <input
+              type="text"
+              required
+              value={parentPhone}
+              onChange={(e) => setParentPhone(e.target.value)}
+              placeholder="10-digit mobile number"
+              className="w-full h-10 px-3 rounded-xl border text-xs font-mono"
+              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
+            />
+          </div>
 
+          {/* Student Phone & Status */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-stone-700 mb-1">Student Phone (Optional)</label>
               <input
@@ -716,18 +726,19 @@ function StudentModal({
                 <option value="INACTIVE">INACTIVE</option>
               </select>
             </div>
+          </div>
 
-            <div className="col-span-2">
-              <label className="block font-bold text-stone-700 mb-1">Notes / Medical Conditions</label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Medical notes, allergies, or belt goals (optional)"
-                rows={2}
-                className="w-full p-2.5 rounded-xl border text-xs"
-                style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
-              />
-            </div>
+          {/* Notes / Medical Conditions */}
+          <div>
+            <label className="block font-bold text-stone-700 mb-1">Notes / Medical Conditions</label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Medical notes, allergies, or belt goals (optional)"
+              rows={2}
+              className="w-full p-2.5 rounded-xl border text-xs"
+              style={{ borderColor: 'var(--border)', background: 'var(--input)' }}
+            />
           </div>
 
           <div className="flex gap-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>

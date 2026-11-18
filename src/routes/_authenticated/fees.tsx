@@ -191,7 +191,7 @@ function FeesPage() {
       {/* Tabs & Month Selector Bar */}
       <div className="bg-white rounded-2xl border p-4 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: 'var(--border)' }}>
         {/* Left Tabs */}
-        <div className="flex border-b sm:border-b-0 space-x-2">
+        <div className="flex space-x-2">
           <button
             onClick={() => setActiveTab('status')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${

@@ -99,6 +99,28 @@ function AttendancePage() {
     } catch {}
   };
 
+  // Save all marked records
+  const handleSaveAll = async () => {
+    setIsSaving(true);
+    try {
+      const recordsToSave: AttendanceRecord[] = Object.entries(marks).map(([studentId, status]) => ({
+        id: crypto.randomUUID(),
+        student_id: studentId,
+        date: selectedDate,
+        status: status as StatusType,
+        notes: notes[studentId] || '',
+      }));
+      if (recordsToSave.length > 0) {
+        await db.push([{ type: 'BULK_ATTENDANCE', payload: recordsToSave }]);
+      }
+      toast.success(`Attendance saved successfully (${recordsToSave.length} marked)`);
+    } catch {
+      toast.error('Failed to save attendance.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Bulk actions
   const handleMarkAll = async (status: StatusType) => {
     const recordsToSave: AttendanceRecord[] = [];

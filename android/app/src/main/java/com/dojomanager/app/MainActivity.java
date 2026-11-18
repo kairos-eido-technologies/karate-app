@@ -174,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
                         file
                     );
 
+                    // Clean phone number (digits only, ensure country code)
+                    String cleanPhone = phoneNumber != null ? phoneNumber.replaceAll("[^0-9]", "") : "";
+                    if (cleanPhone.length() == 10) {
+                        cleanPhone = "91" + cleanPhone;
+                    }
+
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("image/png");
                     shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
@@ -181,15 +187,35 @@ public class MainActivity extends AppCompatActivity {
                         shareIntent.putExtra(Intent.EXTRA_TEXT, caption);
                     }
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                    // Open directly in WhatsApp if available, otherwise show share chooser
+                    if (!cleanPhone.isEmpty()) {
+                        String jid = cleanPhone + "@s.whatsapp.net";
+                        shareIntent.putExtra("jid", jid);
+                        shareIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, cleanPhone);
+                    }
+
+                    // Try direct launch in standard WhatsApp
                     shareIntent.setPackage("com.whatsapp");
                     try {
                         activity.startActivity(shareIntent);
-                    } catch (Exception e) {
-                        shareIntent.setPackage(null);
-                        activity.startActivity(Intent.createChooser(shareIntent, "Share Receipt"));
+                        return;
+                    } catch (Exception e1) {
+                        Log.d(TAG, "Standard WhatsApp launch failed: " + e1.getMessage());
                     }
+
+                    // Try direct launch in WhatsApp Business
+                    shareIntent.setPackage("com.whatsapp.w4b");
+                    try {
+                        activity.startActivity(shareIntent);
+                        return;
+                    } catch (Exception e2) {
+                        Log.d(TAG, "WhatsApp Business launch failed: " + e2.getMessage());
+                    }
+
+                    // Fallback to system share chooser
+                    shareIntent.setPackage(null);
+                    activity.startActivity(Intent.createChooser(shareIntent, "Share Receipt"));
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to share receipt image", e);
                     Toast.makeText(activity, "Share receipt error: " + e.getMessage(), Toast.LENGTH_SHORT).show();

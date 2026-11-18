@@ -306,6 +306,7 @@ export async function shareReceiptToWhatsApp(params: ReceiptImageParams): Promis
 
   // Open WhatsApp chat
   const cleanPhone = parentPhone.replace(/\D/g, '');
-  const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}` : 'https://web.whatsapp.com/';
+  const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+  const waUrl = formattedPhone ? `https://wa.me/${formattedPhone}` : 'https://web.whatsapp.com/';
   window.open(waUrl, '_blank');
 }
